@@ -1,8 +1,8 @@
-# 🏛️ FinSight AI — Agentic Financial Budget Analyst
+# 🏛️ FinSight AI - Agentic Financial Budget Analyst
 
-> 🚧 **Work in Progress** — This project is actively being built. Check the progress tracker below.
+> 🚧 **Work in Progress** - This project is actively being built. Check the progress tracker below.
 
-An intelligent multi-agent RAG system that acts as a financial analyst for Indian government budgets. Unlike typical "chat with PDF" projects, FinSight AI uses **agent orchestration** to plan queries, route to the right retrieval strategy, verify numbers against source tables, and cite exact pages — all exposed as an **MCP server**.
+An intelligent multi-agent RAG system that acts as a financial analyst for Indian government budgets. Unlike typical "chat with PDF" projects, FinSight AI uses **agent orchestration** to plan queries, route to the right retrieval strategy, verify numbers against source tables, and cite exact pages - all exposed as an **MCP server**.
 
 ## 🎯 What This Project Covers
 
@@ -88,4 +88,4 @@ MIT
 
 ## 👤 Author
 
-**Naveena Natarajan** — [GitHub](https://github.com/naveena0308)
+**Naveena Natarajan** - [GitHub](https://github.com/naveena0308)

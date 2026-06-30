@@ -1,0 +1,61 @@
+# ========================
+# Python
+# ========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+venv/
+.venv/
+env/
+.env
+.env.local
+.env.*.local
+
+# ========================
+# Node.js / Next.js
+# ========================
+node_modules/
+.next/
+out/
+.vercel
+
+# ========================
+# IDE
+# ========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ========================
+# OS
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ========================
+# Project-specific
+# ========================
+# Large data files (PDFs stay in raw/, but don't track processed embeddings)
+backend/data/processed/*
+!backend/data/processed/.gitkeep
+
+# ChromaDB local storage
+backend/chroma_db/
+
+# Eval results (regenerated)
+backend/data/eval/results/
+
+# Model artifacts
+backend/models/
+
+# Logs
+*.log
+logs/

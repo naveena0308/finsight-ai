@@ -1,22 +1,34 @@
 # 🏛️ FinSight AI — Agentic Financial Budget Analyst
 
-> A multi-agent RAG system that acts as an intelligent financial analyst for Indian government budgets — not a chatbot, but an **agent that plans, retrieves, verifies, and cites**.
+> 🚧 **Work in Progress** — This project is actively being built. Check the progress tracker below.
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-FinSight_AI-blue?style=for-the-badge)](https://finsight-ai.vercel.app)
-[![MCP Server](https://img.shields.io/badge/MCP_Server-Available-green?style=for-the-badge)](./mcp-server)
+An intelligent multi-agent RAG system that acts as a financial analyst for Indian government budgets. Unlike typical "chat with PDF" projects, FinSight AI uses **agent orchestration** to plan queries, route to the right retrieval strategy, verify numbers against source tables, and cite exact pages — all exposed as an **MCP server**.
 
-## ✨ What Makes This Different
+## 🎯 What This Project Covers
 
-| Typical RAG Project | FinSight AI |
+| Concept | How It's Used |
 |---|---|
-| Single retrieve → generate | Multi-agent pipeline with planning, routing, verification |
-| Text-only search | Hybrid: semantic search + structured table lookup |
-| No evaluation | 50-question eval harness with faithfulness/accuracy metrics |
-| Consumes APIs | **Exposes an MCP server** — plug into Claude Desktop |
-| Single document | Multi-document: TN Budget + India Budget comparison |
-| Text-only answers | Auto-generated charts + page/table citations |
+| **GenAI / LLMs** | Gemini 2.0 Flash for reasoning, embedding, and generation |
+| **RAG** | Hybrid retrieval: semantic search + structured table lookup |
+| **Agentic AI** | Multi-agent pipeline with LangGraph (planner → router → retriever → verifier) |
+| **MCP** | Exposes the system as an MCP server — installable in Claude Desktop |
+| **Evaluation** | RAGAS-based eval harness comparing naive RAG vs agentic pipeline |
+| **Fine-tuning** | Domain-specific model for structured table extraction |
 
-## 🏗️ Architecture
+## 📊 Progress Tracker
+
+- [x] Project scaffold & repo setup
+- [ ] PDF processing pipeline (text + table extraction)
+- [ ] Basic RAG pipeline (naive baseline)
+- [ ] Multi-agent pipeline with LangGraph
+- [ ] India Budget integration & comparison engine
+- [ ] Anomaly detection & budget simulator
+- [ ] MCP server
+- [ ] Evaluation dashboard
+- [ ] Next.js frontend
+- [ ] Deployment
+
+## 🏗️ Architecture (Planned)
 
 ```
 Frontend (Next.js 14)  →  Backend (FastAPI)  →  LangGraph Agents
@@ -26,104 +38,49 @@ Frontend (Next.js 14)  →  Backend (FastAPI)  →  LangGraph Agents
   Vercel                  MCP Server (stdio/SSE)
 ```
 
-### Agent Pipeline
-1. **Planner Agent** — Decomposes query into sub-queries with strategy tags
-2. **Router Agent** — Routes to semantic search or table lookup
-3. **Retrieval Agents** — Semantic (ChromaDB) + Structured (SQLite SQL)
-4. **Verification Agent** — Cross-checks numbers against source tables
-5. **Synthesizer Agent** — Generates cited response with optional charts
+## 📦 Current Project Structure
 
-## 🚀 Features
-
-- 🤖 **Agentic RAG** — Multi-agent orchestration via LangGraph
-- 🔧 **MCP Server** — Installable in Claude Desktop
-- 📊 **Eval Dashboard** — Naive RAG vs Agentic pipeline comparison
-- 🇮🇳 **Budget Comparison** — TN vs India Union Budget
-- 🎰 **Budget Simulator** — "What if education spending increases by 15%?"
-- 🔍 **Anomaly Detection** — Flags unusual budget allocations
-- 📈 **Auto-generated Charts** — Visual answers, not just text
+```
+finsight-ai/
+├── backend/
+│   ├── app/
+│   │   ├── main.py            # FastAPI entry point
+│   │   ├── core/config.py     # Settings from .env
+│   │   ├── agents/            # LangGraph agents (coming soon)
+│   │   ├── services/          # PDF processing, retrieval (coming soon)
+│   │   ├── models/            # Pydantic schemas
+│   │   └── utils/
+│   └── data/
+│       └── raw/               # Source budget PDFs
+├── mcp-server/                # MCP server (coming soon)
+├── frontend/                  # Next.js app (coming soon)
+└── docs/
+```
 
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Frontend | Next.js 14 (App Router), React, Vanilla CSS |
+| Frontend | Next.js 14, React, Vanilla CSS |
 | Backend | FastAPI, Python 3.11+ |
-| Agent Orchestration | LangGraph |
-| LLM | Gemini 2.0 Flash / GPT-4o |
-| Embeddings | Gemini text-embedding-004 |
-| Vector Store | ChromaDB → Pinecone (prod) |
-| Structured Data | SQLite + Pandas |
-| PDF Processing | PyMuPDF + Camelot |
-| MCP | Model Context Protocol SDK |
-| Evaluation | RAGAS + custom metrics |
+| Agents | LangGraph |
+| LLM | Gemini 2.0 Flash |
+| Vector Store | ChromaDB |
+| PDF Processing | PyMuPDF, Camelot |
+| Evaluation | RAGAS |
 | Deployment | Vercel + Railway |
 
-## 📦 Project Structure
+## 🚀 Setup (Development)
 
-```
-finsight-ai/
-├── frontend/              # Next.js 14 app
-│   ├── app/               # App Router pages
-│   ├── components/        # React components
-│   └── public/            # Static assets
-├── backend/               # FastAPI server
-│   ├── app/
-│   │   ├── agents/        # LangGraph agent definitions
-│   │   ├── core/          # Config, database, embeddings
-│   │   ├── services/      # PDF processing, retrieval
-│   │   ├── models/        # Pydantic schemas
-│   │   └── utils/         # Helpers
-│   ├── data/
-│   │   ├── raw/           # Source PDFs
-│   │   ├── processed/     # Extracted tables, chunks
-│   │   └── eval/          # Golden set & results
-│   └── tests/
-├── mcp-server/            # MCP server (stdio/SSE)
-└── docs/                  # Documentation
-```
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Python 3.11+
-- Node.js 18+
-- Gemini API key or OpenAI API key
-
-### Backend Setup
 ```bash
+# Backend
 cd backend
 python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+venv\Scripts\activate        # Windows
 pip install -r requirements.txt
-cp .env.example .env      # Add your API keys
-python -m app.main
+cp .env.example .env         # Add your API keys
+uvicorn app.main:app --reload
 ```
-
-### Frontend Setup
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-### MCP Server (Claude Desktop)
-```bash
-cd mcp-server
-npm install
-# Add to Claude Desktop config — see docs/mcp-setup.md
-```
-
-## 📊 Evaluation Results
-
-| Metric | Naive RAG | Agentic Pipeline | Improvement |
-|---|---|---|---|
-| Numeric Accuracy | TBD | TBD | TBD |
-| Faithfulness | TBD | TBD | TBD |
-| Answer Relevance | TBD | TBD | TBD |
-| Avg Latency | TBD | TBD | — |
-
-*Results will be populated after Phase 6 (Eval Dashboard)*
 
 ## 📄 License
 
@@ -131,4 +88,4 @@ MIT
 
 ## 👤 Author
 
-**Naveena Natarajan**
+**Naveena Natarajan** — [GitHub](https://github.com/naveena0308)

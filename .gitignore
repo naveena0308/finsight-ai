@@ -46,7 +46,6 @@ desktop.ini
 # Large data files (PDFs stay in raw/, but don't track processed embeddings)
 backend/data/processed/*
 !backend/data/processed/.gitkeep
-docs
 
 # ChromaDB local storage
 backend/chroma_db/

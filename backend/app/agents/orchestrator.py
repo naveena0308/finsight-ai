@@ -29,7 +29,7 @@ Analyze the user's question and determine the optimal retrieval strategy:
 3. "HYBRID": The question asks for both exact numbers AND the underlying causes or context (e.g., "How much did debt grow and what are the main factors causing it?").
 
 Respond ONLY in JSON format:
-{"strategy": "TABLE_LOOKUP" | "NARRATIVE_SEARCH" | "HYBRID", "reasoning": "..."}
+{{"strategy": "TABLE_LOOKUP" | "NARRATIVE_SEARCH" | "HYBRID", "reasoning": "..."}}
 
 User Question: {question}
 """

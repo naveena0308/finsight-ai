@@ -1,4 +1,4 @@
-import { ChatMessage, CitationItem, HealthStatus, RetrievalStrategy, TableListResponse } from "./types";
+﻿import { ChatMessage, CitationItem, HealthStatus, RetrievalStrategy, TableDetail, TableListResponse } from "./types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
 
@@ -24,6 +24,12 @@ export async function checkBackendHealth(): Promise<HealthStatus> {
 export async function fetchBudgetTables(): Promise<TableListResponse> {
   const res = await fetch(`${API_BASE_URL}/api/tables`, { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to fetch budget tables");
+  return await res.json();
+}
+
+export async function fetchTableDetail(tableName: string): Promise<TableDetail> {
+  const res = await fetch(`${API_BASE_URL}/api/tables/${encodeURIComponent(tableName)}`, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to fetch details for table: ${tableName}`);
   return await res.json();
 }
 

@@ -28,6 +28,16 @@ export interface TableMetadata {
   sql_table_name: string;
 }
 
+export interface TableDetail {
+  table_id: string;
+  sql_table_name: string;
+  caption: string;
+  page_number: number;
+  chapter: string;
+  columns: string[];
+  rows: (string | number | null)[][];
+}
+
 export interface TableListResponse {
   total_tables: number;
   tables: TableMetadata[];
@@ -38,6 +48,8 @@ export interface HealthStatus {
   services: {
     database: string;
     pgvector: string;
+    orchestrator?: string;
+    mcp_server?: string;
     llm: string;
     tables_indexed: number;
     chunks_indexed: number;

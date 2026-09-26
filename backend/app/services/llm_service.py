@@ -24,6 +24,7 @@ class LLMService:
         self.openai_key = settings.openai_api_key
         self.gemini_model = settings.primary_llm_model or "gemini-3.8-flash"
         self.openai_model = "gpt-4o-mini"
+        self.gemini_exhausted = False  # Circuit breaker: skips Gemini if daily quota exceeded
 
         # Initialize clients
         self.gemini_client = genai.Client(api_key=self.gemini_key) if self.gemini_key else None
@@ -39,12 +40,12 @@ class LLMService:
     ) -> str:
         """
         Generate text response with automatic retry on temporary demand spikes (503)
-        and fallback to OpenAI if Gemini fails completely.
+        and immediate fallback to OpenAI if Gemini fails or hits daily quota.
         """
         full_prompt = f"System: {system_instruction}\n\nUser Question/Task:\n{prompt}" if system_instruction else prompt
 
-        # 1. Try Primary: Gemini (with retries for temporary 503/429 spikes)
-        if self.gemini_client:
+        # 1. Try Primary: Gemini (if not marked quota-exhausted)
+        if self.gemini_client and not self.gemini_exhausted:
             for attempt in range(retries + 1):
                 try:
                     response = self.gemini_client.models.generate_content(
@@ -55,17 +56,23 @@ class LLMService:
                         return response.text.strip()
                 except Exception as e:
                     err_msg = str(e)
-                    is_transient = "503" in err_msg or "high demand" in err_msg or "429" in err_msg
+                    is_quota = "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg or "quota" in err_msg.lower()
+                    if is_quota:
+                        logger.warning("[LLM] Gemini quota reached (429). Activating OpenAI fallback immediately...")
+                        self.gemini_exhausted = True
+                        break
+
+                    is_transient = "503" in err_msg or "high demand" in err_msg
                     if is_transient and attempt < retries:
-                        sleep_time = 1.5 * (attempt + 1)
-                        logger.info(f"[LLM] Gemini busy (503). Retrying in {sleep_time}s (attempt {attempt+1}/{retries})...")
+                        sleep_time = 1.0 * (attempt + 1)
+                        logger.info(f"[LLM] Gemini busy (503). Retrying in {sleep_time}s...")
                         time.sleep(sleep_time)
                         continue
                     else:
-                        logger.warning(f"[LLM] Gemini request failed after {attempt+1} attempts ({e}). Attempting OpenAI fallback...")
+                        logger.warning(f"[LLM] Gemini generation failed: {e}. Switching to OpenAI...")
                         break
 
-        # 2. Try Fallback: OpenAI
+        # 2. Try Fallback: OpenAI (gpt-4o-mini)
         if self.openai_client and self.openai_key:
             try:
                 messages = []
@@ -79,12 +86,12 @@ class LLMService:
                     temperature=temperature,
                     max_tokens=max_output_tokens,
                 )
-                logger.info("[LLM] Successfully used OpenAI fallback.")
+                logger.info("[LLM] OpenAI fallback generated response successfully.")
                 return response.choices[0].message.content.strip()
             except Exception as e:
-                logger.error(f"[LLM] OpenAI fallback also failed: {e}")
+                logger.error(f"[LLM] OpenAI fallback failed: {e}")
 
-        # If both fail or clients not configured
+        # If both fail
         raise RuntimeError(
             "Both primary (Gemini) and fallback (OpenAI) LLM generation failed. "
             "Please check API keys and connectivity."

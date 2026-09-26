@@ -1,6 +1,6 @@
-﻿import { ChatMessage, CitationItem, HealthStatus, RetrievalStrategy, TableListResponse } from "./types";
+import { ChatMessage, CitationItem, HealthStatus, RetrievalStrategy, TableListResponse } from "./types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
 
 export async function checkBackendHealth(): Promise<HealthStatus> {
   try {

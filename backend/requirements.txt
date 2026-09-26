@@ -38,7 +38,8 @@ sqlalchemy==2.0.41
 ragas==0.2.16
 
 # ========================
-# Utilities
+# Utilities & Database
 # ========================
 httpx==0.28.1
 numpy==2.3.0
+pg8000>=1.31.2

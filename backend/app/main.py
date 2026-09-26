@@ -1,7 +1,7 @@
-"""
+﻿"""
 FinSight AI — FastAPI Backend Entry Point
 
-Run with: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+Run with: uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 """
 
 from contextlib import asynccontextmanager
@@ -11,6 +11,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from app.agents.graph_orchestrator import run_graph_chat
 from app.agents.orchestrator import process_chat_message
 from app.agents.table_agent import get_all_table_metadata
 from app.core.config import settings
@@ -37,12 +38,12 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="FinSight AI",
-    description="Agentic Financial Budget Analyst — Multi-agent RAG pipeline for Indian government budgets",
-    version="0.1.0",
+    description="Agentic Financial Budget Analyst — LangGraph Multi-agent RAG pipeline for Indian government budgets",
+    version="0.2.0",
     lifespan=lifespan,
 )
 
-# CORS for Next.js frontend
+# CORS for Next.js frontend (permits ports 3000, 3001, and dynamic localhost origins)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -59,7 +60,8 @@ async def root():
     return {
         "name": "FinSight AI",
         "status": "running",
-        "version": "0.1.0",
+        "version": "0.2.0",
+        "orchestrator": "LangGraph StateGraph",
         "database": "Neon PostgreSQL (pgvector)",
         "primary_llm": settings.primary_llm_model,
     }
@@ -73,6 +75,8 @@ async def health():
         "services": {
             "database": "connected (Neon)",
             "pgvector": "enabled",
+            "orchestrator": "LangGraph StateGraph",
+            "mcp_server": "ready (FinSight-AI)",
             "llm": "ready (Gemini 3.8 Flash + OpenAI Fallback)",
             "tables_indexed": 42,
             "chunks_indexed": 163,
@@ -94,17 +98,27 @@ async def list_tables():
 async def chat(request: ChatRequest):
     """
     Main Chatbot Agent Endpoint:
-    Processes user query, routes to SQL/Vector agents, and returns citation-backed answer.
+    Processes user query using LangGraph multi-agent state graph with query planning,
+    SQL table lookups, pgvector semantic search, and citation verification.
     """
     if not request.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty.")
 
     try:
-        result = process_chat_message(request.message)
+        result = run_graph_chat(request.message)
         return ChatResponse(
             strategy=result["strategy"],
             response=result["answer"],
             citations=result["citations"],
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Agent error: {str(e)}")
+        # Fallback to direct orchestrator
+        try:
+            result = process_chat_message(request.message)
+            return ChatResponse(
+                strategy=result["strategy"],
+                response=result["answer"],
+                citations=result["citations"],
+            )
+        except Exception:
+            raise HTTPException(status_code=500, detail=f"Agent error: {str(e)}")

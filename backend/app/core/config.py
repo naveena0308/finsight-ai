@@ -1,4 +1,4 @@
-"""
+﻿"""
 Application configuration loaded from environment variables.
 """
 
@@ -12,8 +12,8 @@ from pydantic_settings import BaseSettings
 # Project root (backend/)
 BACKEND_ROOT = Path(__file__).parent.parent.parent
 
-# Load .env file explicitly
-load_dotenv(BACKEND_ROOT / ".env")
+# Load .env file explicitly with override=True to guarantee precedence over stale OS environment variables
+load_dotenv(BACKEND_ROOT / ".env", override=True)
 
 
 class Settings(BaseSettings):
@@ -37,7 +37,7 @@ class Settings(BaseSettings):
 
     # --- Server ---
     host: str = Field(default="0.0.0.0", alias="HOST")
-    port: int = Field(default=8000, alias="PORT")
+    port: int = Field(default=8001, alias="PORT")
     cors_origins: List[str] = Field(
         default=[
             "http://localhost:3000",

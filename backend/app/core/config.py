@@ -2,7 +2,6 @@
 Application configuration loaded from environment variables.
 """
 
-import os
 from pathlib import Path
 from typing import List
 
@@ -10,11 +9,11 @@ from dotenv import load_dotenv
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-# Load .env file
-load_dotenv()
-
 # Project root (backend/)
 BACKEND_ROOT = Path(__file__).parent.parent.parent
+
+# Load .env file explicitly
+load_dotenv(BACKEND_ROOT / ".env")
 
 
 class Settings(BaseSettings):
@@ -23,8 +22,13 @@ class Settings(BaseSettings):
     # --- LLM ---
     gemini_api_key: str = Field(default="", alias="GEMINI_API_KEY")
     openai_api_key: str = Field(default="", alias="OPENAI_API_KEY")
-    primary_llm_model: str = Field(default="gemini-2.0-flash", alias="PRIMARY_LLM_MODEL")
-    embedding_model: str = Field(default="text-embedding-004", alias="EMBEDDING_MODEL")
+    primary_llm_model: str = Field(default="gemini-3.8-flash", alias="PRIMARY_LLM_MODEL")
+    embedding_model: str = Field(default="gemini-embedding-001", alias="EMBEDDING_MODEL")
+
+    # --- Database (Neon Postgres) ---
+    database_url: str = Field(default="", alias="DATABASE_URL")
+    database_url_unpooled: str = Field(default="", alias="DATABASE_URL_UNPOOLED")
+    neon_branch: str = Field(default="production", alias="NEON_BRANCH")
 
     # --- Vector Store ---
     chroma_persist_dir: str = Field(
@@ -50,8 +54,9 @@ class Settings(BaseSettings):
     )
 
     class Config:
-        env_file = ".env"
+        env_file = str(BACKEND_ROOT / ".env")
         populate_by_name = True
+        extra = "ignore"
 
 
 settings = Settings()

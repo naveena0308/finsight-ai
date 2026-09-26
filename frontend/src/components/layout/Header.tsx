@@ -2,7 +2,7 @@
 
 import React from "react";
 import { HealthStatus } from "@/lib/types";
-import { Database, Sparkles, Table2, MessageSquare } from "lucide-react";
+import { Database, Sparkles, BarChart3, MessageSquare } from "lucide-react";
 
 interface HeaderProps {
   health: HealthStatus | null;
@@ -55,10 +55,10 @@ export const Header: React.FC<HeaderProps> = ({ health, activeTab, onTabChange }
                 : "text-slate-400 hover:text-slate-200"
             }`}
           >
-            <Table2 className="w-4 h-4" />
-            <span>Budget Tables</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300">
-              42
+            <BarChart3 className="w-4 h-4" />
+            <span>Visual Dashboard</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-mono">
+              Live
             </span>
           </button>
         </div>

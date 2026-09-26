@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { ChatContainer } from "@/components/chat/ChatContainer";
-import { TableExplorer } from "@/components/tables/TableExplorer";
+import { FiscalDashboard } from "@/components/dashboard/FiscalDashboard";
 import { HealthStatus, TableMetadata } from "@/lib/types";
 import { checkBackendHealth, fetchBudgetTables } from "@/lib/api";
 
@@ -12,6 +12,7 @@ export default function Home() {
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [tables, setTables] = useState<TableMetadata[]>([]);
   const [loadingTables, setLoadingTables] = useState(false);
+  const [pendingQuery, setPendingQuery] = useState<string | null>(null);
 
   useEffect(() => {
     // Initial health check
@@ -25,16 +26,28 @@ export default function Home() {
       .finally(() => setLoadingTables(false));
   }, []);
 
+  const handleAskAIFromDashboard = (question: string) => {
+    setPendingQuery(question);
+    setActiveTab("chat");
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500/30 selection:text-amber-200">
       <Header health={health} activeTab={activeTab} onTabChange={setActiveTab} />
 
       <main className="flex-1 flex flex-col">
         {activeTab === "chat" ? (
-          <ChatContainer />
+          <ChatContainer
+            initialQuery={pendingQuery}
+            onClearInitialQuery={() => setPendingQuery(null)}
+          />
         ) : (
           <div className="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex-1">
-            <TableExplorer tables={tables} loading={loadingTables} />
+            <FiscalDashboard
+              tables={tables}
+              loading={loadingTables}
+              onAskAI={handleAskAIFromDashboard}
+            />
           </div>
         )}
       </main>

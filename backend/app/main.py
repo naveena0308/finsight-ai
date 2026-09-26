@@ -1,4 +1,4 @@
-﻿"""
+"""
 FinSight AI — FastAPI Backend Entry Point
 
 Run with: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -46,6 +46,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
+    allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

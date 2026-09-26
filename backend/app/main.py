@@ -4,6 +4,7 @@ FinSight AI — FastAPI Backend Entry Point
 Run with: uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 """
 
+import json
 from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional
 
@@ -15,6 +16,7 @@ from app.agents.graph_orchestrator import run_graph_chat
 from app.agents.orchestrator import process_chat_message
 from app.agents.table_agent import get_all_table_metadata
 from app.core.config import settings
+from app.services.postgres_service import get_pg_connection
 
 
 class ChatRequest(BaseModel):
@@ -92,6 +94,37 @@ async def list_tables():
         return {"total_tables": len(tables), "tables": tables}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/tables/{table_name}")
+async def get_table_details(table_name: str):
+    """Returns actual rows and metadata for a specific budget table."""
+    con = get_pg_connection()
+    try:
+        meta_rows = con.run(
+            'SELECT table_id, caption, page_number, chapter, column_names FROM table_metadata WHERE sql_table_name = :t;',
+            t=table_name,
+        )
+        if not meta_rows:
+            raise HTTPException(status_code=404, detail=f"Table '{table_name}' not found.")
+        meta = meta_rows[0]
+        cols = json.loads(meta[4]) if meta[4] else []
+        data_rows = con.run(f'SELECT * FROM "{table_name}";')
+        return {
+            "table_id": meta[0],
+            "sql_table_name": table_name,
+            "caption": meta[1] or table_name,
+            "page_number": meta[2],
+            "chapter": meta[3] or "",
+            "columns": cols,
+            "rows": data_rows,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        con.close()
 
 
 @app.post("/api/chat", response_model=ChatResponse)

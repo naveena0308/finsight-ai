@@ -1,6 +1,8 @@
-﻿import { ChatMessage, CitationItem, HealthStatus, RetrievalStrategy, TableDetail, TableListResponse } from "./types";
+import { ChatMessage, CitationItem, HealthStatus, RetrievalStrategy, TableDetail, TableListResponse } from "./types";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8001";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "https://finsight-ai-backend-ec1u.onrender.com";
+
 
 export async function checkBackendHealth(): Promise<HealthStatus> {
   try {

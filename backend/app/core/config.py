@@ -39,7 +39,13 @@ class Settings(BaseSettings):
     host: str = Field(default="0.0.0.0", alias="HOST")
     port: int = Field(default=8000, alias="PORT")
     cors_origins: List[str] = Field(
-        default=["http://localhost:3000"], alias="CORS_ORIGINS"
+        default=[
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:3001",
+        ],
+        alias="CORS_ORIGINS",
     )
 
     # --- Data Paths ---

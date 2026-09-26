@@ -1,7 +1,9 @@
 import { ChatMessage, CitationItem, HealthStatus, RetrievalStrategy, TableDetail, TableListResponse } from "./types";
 
-const API_BASE_URL =
+const RAW_API_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://finsight-ai-backend-ec1u.onrender.com";
+const API_BASE_URL = RAW_API_URL.replace(/\/+$/, "");
+
 
 
 export async function checkBackendHealth(): Promise<HealthStatus> {

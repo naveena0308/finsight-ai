@@ -30,9 +30,9 @@ class ChatResponse(BaseModel):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
-    print("🚀 FinSight AI backend starting up with Neon Postgres & Gemini/OpenAI...")
+    print("[FinSight AI] Backend starting up with Neon Postgres & Gemini/OpenAI...")
     yield
-    print("👋 FinSight AI backend shutting down...")
+    print("[FinSight AI] Backend shutting down...")
 
 
 app = FastAPI(

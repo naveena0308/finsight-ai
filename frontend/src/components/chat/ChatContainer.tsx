@@ -94,6 +94,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       handleSendMessage(initialQuery);
       onClearInitialQuery?.();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuery]);
 
   return (

@@ -3,7 +3,7 @@
 import React from "react";
 import { HealthStatus } from "@/lib/types";
 import { AuthUser } from "../auth/AuthModal";
-import { Database, Sparkles, BarChart3, MessageSquare, LogOut, User as UserIcon, LogIn } from "lucide-react";
+import { Database, BarChart3, MessageSquare, LogOut, LogIn } from "lucide-react";
 
 interface HeaderProps {
   health: HealthStatus | null;

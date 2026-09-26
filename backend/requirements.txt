@@ -24,7 +24,7 @@ chromadb==1.0.10
 # PDF & Data Processing
 # ========================
 PyMuPDF==1.25.5
-pandas==2.3.0
+pandas==2.2.3
 
 # ========================
 # Structured Data & DB
@@ -36,5 +36,6 @@ pg8000>=1.31.2
 # Utilities
 # ========================
 httpx==0.28.1
-numpy==2.3.0
+numpy==1.26.4
+
 

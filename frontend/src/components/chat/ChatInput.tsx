@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef } from "react";
 import { SUGGESTED_PROMPTS } from "@/lib/constants";
@@ -33,19 +33,19 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 pb-3">
       {/* Suggestion Chips */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs no-scrollbar">
         <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider shrink-0 flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-amber-400" />
-          Prompts:
+          <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+          Suggested:
         </span>
         {SUGGESTED_PROMPTS.map((p, idx) => (
           <button
             key={idx}
             onClick={() => handleSelectPrompt(p.question)}
             disabled={disabled}
-            className="px-2.5 py-1 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-amber-300 text-xs whitespace-nowrap transition-all disabled:opacity-50"
+            className="px-3 py-1 rounded-full bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-300 text-slate-700 hover:text-amber-900 text-xs whitespace-nowrap transition-all shadow-2xs disabled:opacity-50 font-medium"
           >
             {p.title}
           </button>
@@ -55,7 +55,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
       {/* Input Form */}
       <form
         onSubmit={handleSubmit}
-        className="relative flex items-end gap-2 bg-slate-900/80 border border-slate-800 focus-within:border-amber-500/50 rounded-2xl p-2.5 transition-all shadow-xl"
+        className="relative flex items-end gap-2 bg-white border border-slate-200/90 focus-within:border-amber-500/80 focus-within:ring-4 focus-within:ring-amber-500/10 rounded-2xl p-3 transition-all shadow-[0_10px_35px_rgba(0,0,0,0.06)]"
       >
         <textarea
           ref={textareaRef}
@@ -65,13 +65,13 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
           placeholder="Ask a question about the Tamil Nadu Budget (e.g. debt, deficit, fiscal targets, peer comparisons)..."
           rows={2}
           disabled={disabled}
-          className="flex-1 bg-transparent resize-none text-slate-100 placeholder-slate-500 text-sm focus:outline-none px-2 py-1 max-h-32"
+          className="flex-1 bg-transparent resize-none text-slate-800 placeholder-slate-400 text-sm focus:outline-none px-2 py-1 max-h-32"
         />
 
         <button
           type="submit"
           disabled={!input.trim() || disabled}
-          className="p-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-amber-500/10 shrink-0"
+          className="p-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-amber-500/20 shrink-0"
         >
           <SendHorizontal className="w-4 h-4" />
         </button>

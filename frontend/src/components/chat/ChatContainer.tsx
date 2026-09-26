@@ -116,15 +116,15 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
         ))}
 
         {loading && (
-          <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-900/40 border border-slate-800/60 text-slate-400 text-xs animate-pulse">
-            <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+          <div className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-200/90 text-slate-600 text-xs shadow-sm animate-pulse">
+            <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
             <span>Agent orchestrating table analytics and pgvector semantic retrieval...</span>
           </div>
         )}
 
         {error && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2 shadow-xs">
+            <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
             <span>{error}</span>
           </div>
         )}

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import { ChatMessage, CitationItem } from "@/lib/types";
@@ -8,7 +8,15 @@ import { ChatInput } from "./ChatInput";
 import { CitationDrawer } from "../citations/CitationDrawer";
 import { AlertCircle, Loader2 } from "lucide-react";
 
-export const ChatContainer: React.FC = () => {
+interface ChatContainerProps {
+  initialQuery?: string | null;
+  onClearInitialQuery?: () => void;
+}
+
+export const ChatContainer: React.FC<ChatContainerProps> = ({
+  initialQuery,
+  onClearInitialQuery,
+}) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
@@ -73,40 +81,50 @@ export const ChatContainer: React.FC = () => {
       };
       setMessages((prev) => [...prev, assistantMsg]);
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : "Failed to communicate with FinSight agent.";
-      setError(errorMsg);
+      const errorMessage =
+        err instanceof Error ? err.message : "An unexpected error occurred.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (initialQuery && initialQuery.trim()) {
+      handleSendMessage(initialQuery);
+      onClearInitialQuery?.();
+    }
+  }, [initialQuery]);
+
   return (
-    <div className="flex flex-col h-[calc(100vh-5rem)] max-w-5xl mx-auto p-4 sm:p-6">
-      {/* Scrollable Messages Container */}
-      <div className="flex-1 overflow-y-auto space-y-4 pr-1 mb-4">
-        {messages.map((m) => (
+    <div className="flex-1 flex flex-col h-[calc(100vh-4rem)] max-w-5xl mx-auto w-full relative">
+      {/* Side-Inspector Citation Drawer */}
+      <CitationDrawer
+        citation={selectedCitation}
+        isOpen={Boolean(selectedCitation)}
+        onClose={() => setSelectedCitation(null)}
+      />
+
+      {/* Messages Scroll Area */}
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-6">
+        {messages.map((msg) => (
           <MessageItem
-            key={m.id}
-            message={m}
+            key={msg.id}
+            message={msg}
             onCitationClick={(cit) => setSelectedCitation(cit)}
           />
         ))}
 
-        {/* Loading Spinner */}
         {loading && (
-          <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-slate-400 text-xs">
-            <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
-            <div className="space-y-0.5">
-              <p className="font-medium text-slate-300">FinSight AI Multi-Agent Orchestrator is reasoning...</p>
-              <p className="text-[11px] text-slate-500">Routing query between Neon SQL tables & pgvector semantic chunks</p>
-            </div>
+          <div className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-slate-200/90 text-slate-600 text-xs shadow-sm animate-pulse">
+            <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
+            <span>Agent orchestrating table analytics and pgvector semantic retrieval...</span>
           </div>
         )}
 
-        {/* Error Banner */}
         {error && (
-          <div className="flex items-center gap-2.5 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2 shadow-xs">
+            <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
             <span>{error}</span>
           </div>
         )}
@@ -114,16 +132,8 @@ export const ChatContainer: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Bar */}
-      <div className="shrink-0 pt-2 border-t border-slate-900">
-        <ChatInput onSend={handleSendMessage} disabled={loading} />
-      </div>
-
-      {/* Slide-over Citation Inspector */}
-      <CitationDrawer
-        citation={selectedCitation}
-        onClose={() => setSelectedCitation(null)}
-      />
+      {/* Chat Input Floating Dock */}
+      <ChatInput onSend={handleSendMessage} disabled={loading} />
     </div>
   );
 };

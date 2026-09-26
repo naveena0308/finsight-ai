@@ -10,6 +10,8 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from pathlib import Path
 from pydantic import BaseModel
 
 from app.agents.graph_orchestrator import run_graph_chat
@@ -154,3 +156,22 @@ async def chat(request: ChatRequest):
             )
         except Exception:
             raise HTTPException(status_code=500, detail=f"Agent error: {str(e)}")
+
+
+@app.get("/api/pdf")
+async def get_white_paper_pdf():
+    """Serves the official Tamil Nadu Fiscal Management White Paper PDF."""
+    raw_dir = Path(settings.raw_data_dir)
+    pdf_path = raw_dir / "TN_White_Paper_English-2026.pdf"
+    if not pdf_path.exists():
+        alt_path = Path(__file__).resolve().parent.parent / "data" / "raw" / "TN_White_Paper_English-2026.pdf"
+        if alt_path.exists():
+            pdf_path = alt_path
+        else:
+            raise HTTPException(status_code=404, detail="White paper PDF not found.")
+    return FileResponse(
+        str(pdf_path),
+        media_type="application/pdf",
+        filename="TN_White_Paper_English-2026.pdf",
+    )
+

@@ -1,4 +1,4 @@
-﻿"""
+"""
 FinSight AI — FastAPI Backend Entry Point
 
 Run with: uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
@@ -45,11 +45,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS for Next.js frontend (permits ports 3000, 3001, and dynamic localhost origins)
+# CORS for Next.js frontend (permits localhost, preview, and production Vercel domains)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
-    allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
+    allow_origin_regex=r"^https://.*\.vercel\.app$|^http://(localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

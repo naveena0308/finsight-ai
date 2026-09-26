@@ -21,25 +21,20 @@ langgraph==0.4.8
 chromadb==1.0.10
 
 # ========================
-# PDF Processing
+# PDF & Data Processing
 # ========================
 PyMuPDF==1.25.5
-camelot-py[cv]==0.11.0
 pandas==2.3.0
 
 # ========================
-# Structured Data
+# Structured Data & DB
 # ========================
 sqlalchemy==2.0.41
+pg8000>=1.31.2
 
 # ========================
-# Evaluation
-# ========================
-ragas==0.2.16
-
-# ========================
-# Utilities & Database
+# Utilities
 # ========================
 httpx==0.28.1
 numpy==2.3.0
-pg8000>=1.31.2
+

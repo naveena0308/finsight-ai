@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { ChatContainer } from "@/components/chat/ChatContainer";
 import { FiscalDashboard } from "@/components/dashboard/FiscalDashboard";
+import { FiscalSimulator } from "@/components/simulator/FiscalSimulator";
 import { AuthModal, AuthUser } from "@/components/auth/AuthModal";
 import { HealthStatus, TableMetadata } from "@/lib/types";
 import { checkBackendHealth, fetchBudgetTables } from "@/lib/api";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"chat" | "tables">("chat");
+  const [activeTab, setActiveTab] = useState<"chat" | "tables" | "simulator">("chat");
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [tables, setTables] = useState<TableMetadata[]>([]);
   const [loadingTables, setLoadingTables] = useState(false);
@@ -65,18 +66,26 @@ export default function Home() {
       />
 
       <main className="flex-1 flex flex-col">
-        {activeTab === "chat" ? (
+        {activeTab === "chat" && (
           <ChatContainer
             initialQuery={pendingQuery}
             onClearInitialQuery={() => setPendingQuery(null)}
           />
-        ) : (
+        )}
+
+        {activeTab === "tables" && (
           <div className="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex-1">
             <FiscalDashboard
               tables={tables}
               loading={loadingTables}
               onAskAI={handleAskAIFromDashboard}
             />
+          </div>
+        )}
+
+        {activeTab === "simulator" && (
+          <div className="max-w-7xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex-1">
+            <FiscalSimulator onAskAI={handleAskAIFromDashboard} />
           </div>
         )}
       </main>

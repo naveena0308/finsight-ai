@@ -3,12 +3,12 @@
 import React from "react";
 import { HealthStatus } from "@/lib/types";
 import { AuthUser } from "../auth/AuthModal";
-import { Database, BarChart3, MessageSquare, LogOut, LogIn } from "lucide-react";
+import { Database, BarChart3, MessageSquare, Sliders, LogOut, LogIn } from "lucide-react";
 
 interface HeaderProps {
   health: HealthStatus | null;
-  activeTab: "chat" | "tables";
-  onTabChange: (tab: "chat" | "tables") => void;
+  activeTab: "chat" | "tables" | "simulator";
+  onTabChange: (tab: "chat" | "tables" | "simulator") => void;
   user: AuthUser | null;
   onOpenAuth: () => void;
   onSignOut: () => void;
@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center bg-slate-100/90 border border-slate-200/80 rounded-xl p-1 text-sm font-medium shadow-inner">
           <button
             onClick={() => onTabChange("chat")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
               activeTab === "chat"
                 ? "bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60"
                 : "text-slate-600 hover:text-slate-900"
@@ -60,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
           <button
             onClick={() => onTabChange("tables")}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
               activeTab === "tables"
                 ? "bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60"
                 : "text-slate-600 hover:text-slate-900"
@@ -68,8 +68,19 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <BarChart3 className="w-4 h-4 text-indigo-600" />
             <span>Visual Dashboard</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 font-mono font-semibold">
-              Live
+          </button>
+          <button
+            onClick={() => onTabChange("simulator")}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
+              activeTab === "simulator"
+                ? "bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <Sliders className="w-4 h-4 text-emerald-600" />
+            <span>Fiscal Simulator</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 font-mono font-semibold">
+              New
             </span>
           </button>
         </div>

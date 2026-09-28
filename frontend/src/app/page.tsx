@@ -79,6 +79,7 @@ export default function Home() {
               tables={tables}
               loading={loadingTables}
               onAskAI={handleAskAIFromDashboard}
+              onNavigateTab={setActiveTab}
             />
           </div>
         )}

@@ -55,7 +55,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#08090C] text-slate-100 flex flex-col font-sans relative selection:bg-amber-500/25 selection:text-amber-200">
+    <div className="min-h-screen bg-[#FAFAFA] text-zinc-900 flex flex-col font-sans relative selection:bg-zinc-200 selection:text-zinc-900">
       <Header
         health={health}
         activeTab={activeTab}

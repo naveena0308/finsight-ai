@@ -3,39 +3,34 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
-  --background: #08090C;
-  --foreground: #F8FAFC;
+  color-scheme: light;
+  --background: #FAFAFA;
+  --foreground: #09090B;
 }
 
 body {
-  background-color: #08090C;
-  color: #F8FAFC;
-  background-image: 
-    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(245, 158, 11, 0.08) 0%, transparent 65%),
-    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(99, 102, 241, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 0% 90%, rgba(245, 158, 11, 0.03) 0%, transparent 50%);
-  background-attachment: fixed;
+  background-color: #FAFAFA;
+  color: #09090B;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
-/* Elite Obsidian Dark Scrollbar */
+/* Minimalist Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #08090C;
+  background: #FAFAFA;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #272B38;
+  background: #E4E4E7;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3B4254;
+  background: #A1A1AA;
 }
 
 /* Hide scrollbar utility */
@@ -45,27 +40,4 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-/* FinSight Elite Obsidian Design System Utilities */
-.obsidian-card {
-  background: rgba(16, 20, 29, 0.72);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-}
-
-.obsidian-card-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.obsidian-card-hover:hover {
-  transform: translateY(-2px);
-  border-color: rgba(245, 158, 11, 0.35);
-  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.1);
-}
-
-.glow-amber {
-  box-shadow: 0 0 30px -5px rgba(245, 158, 11, 0.25);
 }

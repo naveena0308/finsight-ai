@@ -14,12 +14,15 @@ import {
   ReferenceLine,
 } from "recharts";
 import {
-  Sliders,
+  SlidersHorizontal,
   Sparkles,
   RotateCcw,
   ShieldAlert,
   ArrowRight,
   Info,
+  TrendingUp,
+  Scale,
+  Landmark,
 } from "lucide-react";
 
 interface FiscalSimulatorProps {
@@ -44,7 +47,7 @@ const PRESETS = [
     salaryGrowth: 8.0,
     gsdpGrowth: 12.0,
     badge: "Neutral",
-    badgeColor: "bg-slate-100 text-slate-700 border-slate-200",
+    badgeColor: "bg-white/[0.06] text-slate-300 border-white/10",
   },
   {
     name: "Stagflation Shock",
@@ -53,7 +56,7 @@ const PRESETS = [
     salaryGrowth: 11.0,
     gsdpGrowth: 8.0,
     badge: "Severe Stress",
-    badgeColor: "bg-rose-50 text-rose-700 border-rose-200",
+    badgeColor: "bg-rose-500/10 text-rose-300 border-rose-500/30",
   },
   {
     name: "High Interest Hike",
@@ -62,7 +65,7 @@ const PRESETS = [
     salaryGrowth: 8.0,
     gsdpGrowth: 10.0,
     badge: "Debt Spiral",
-    badgeColor: "bg-amber-50 text-amber-700 border-amber-200",
+    badgeColor: "bg-amber-500/10 text-amber-300 border-amber-500/30",
   },
   {
     name: "Fiscal Consolidation",
@@ -71,7 +74,7 @@ const PRESETS = [
     salaryGrowth: 6.0,
     gsdpGrowth: 13.0,
     badge: "FRBM Compliant",
-    badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    badgeColor: "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
   },
 ];
 
@@ -165,27 +168,27 @@ export const FiscalSimulator: React.FC<FiscalSimulatorProps> = ({ onAskAI }) => 
     if (peakDebtRatio >= 33.0) {
       return {
         label: "Critical Fiscal Vulnerability",
-        color: "text-rose-600 bg-rose-50 border-rose-200",
+        color: "text-rose-300 bg-rose-500/10 border-rose-500/30",
         desc: "Severe debt-servicing crowding out; debt sustainability compromised.",
       };
     }
     if (peakDebtRatio > 28.0) {
       return {
         label: "Elevated Debt Stress",
-        color: "text-amber-600 bg-amber-50 border-amber-200",
+        color: "text-amber-300 bg-amber-500/10 border-amber-500/30",
         desc: "Significant deviation from the 25% FRBM ceiling; requires expenditure pruning.",
       };
     }
     if (peakDebtRatio > 25.0) {
       return {
         label: "Moderate Target Breach",
-        color: "text-yellow-600 bg-yellow-50 border-yellow-200",
+        color: "text-amber-200/90 bg-amber-500/5 border-amber-400/20",
         desc: "Slightly over FRBM benchmark, manageable with steady state growth.",
       };
     }
     return {
       label: "FRBM Compliant / Sustainable",
-      color: "text-emerald-600 bg-emerald-50 border-emerald-200",
+      color: "text-emerald-300 bg-emerald-500/10 border-emerald-500/30",
       desc: "Within statutory 25% debt ceiling with adequate capital expenditure room.",
     };
   };
@@ -208,36 +211,40 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
 
   return (
     <div className="space-y-6">
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 rounded-2xl text-white shadow-xl border border-indigo-900/50">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
-              <Sliders className="w-5 h-5" />
-            </span>
-            <h2 className="text-xl font-bold tracking-tight">
-              Macroeconomic Fiscal Policy Simulator
-            </h2>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 font-medium">
-              Medium-Term Horizon (2021-27)
-            </span>
+      {/* Header Banner - Obsidian Glass with Amber Glow */}
+      <div className="relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-5 bg-[#0E121B]/90 backdrop-blur-2xl p-6 sm:p-7 rounded-3xl border border-white/[0.08] shadow-[0_16px_40px_rgba(0,0,0,0.5)]">
+        <div className="absolute -top-12 -left-12 w-48 h-48 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="flex items-start gap-4 z-10">
+          <div className="w-14 h-14 rounded-2xl bg-amber-400/10 text-amber-400 border border-amber-400/25 flex items-center justify-center shrink-0 shadow-[0_0_24px_rgba(245,158,11,0.2)]">
+            <SlidersHorizontal className="w-7 h-7 stroke-[2.2]" />
           </div>
-          <p className="text-slate-300 text-sm mt-1.5 max-w-2xl">
-            Simulate the impact of interest rate shocks, wage bill hikes, and GSDP growth fluctuations on Tamil Nadu&apos;s public debt trajectory against the <strong>25% FRBM statutory debt ceiling</strong>.
-          </p>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-mono">
+                Macroeconomic Fiscal Policy Simulator
+              </h2>
+              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/20 font-medium">
+                Medium-Term (2021–2027)
+              </span>
+            </div>
+            <p className="text-slate-400 text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
+              Stress-test the impact of borrowing rates, wage inflation, and state GDP growth on Tamil Nadu&apos;s debt trajectory against the <strong className="text-amber-300">25% FRBM statutory limit</strong>.
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 z-10 shrink-0">
           <button
             onClick={handleReset}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold border border-slate-700 transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white text-xs font-semibold border border-white/10 transition-all shadow-sm active:scale-95"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Baseline</span>
           </button>
           <button
             onClick={handleConsultAI}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs transition-all shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-xs transition-all shadow-[0_0_20px_rgba(245,158,11,0.25)] hover:shadow-[0_0_30px_rgba(245,158,11,0.45)] active:scale-95"
           >
             <Sparkles className="w-4 h-4 text-slate-950" />
             <span>Ask AI to Evaluate Scenario</span>
@@ -261,23 +268,23 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
                 setSalaryGrowth(p.salaryGrowth);
                 setGsdpGrowth(p.gsdpGrowth);
               }}
-              className={`p-3.5 rounded-xl text-left border transition-all relative ${
+              className={`p-4 rounded-2xl text-left border transition-all relative ${
                 isActive
-                  ? "bg-amber-50/80 border-amber-400 shadow-md ring-2 ring-amber-400/20"
-                  : "bg-white hover:bg-slate-50 border-slate-200/90 shadow-2xs hover:border-slate-300"
+                  ? "bg-gradient-to-br from-[#161B28] to-[#121622] border-amber-400/50 shadow-[0_0_25px_rgba(245,158,11,0.15)] ring-1 ring-amber-400/30"
+                  : "bg-[#0E121B]/70 hover:bg-[#121722]/90 border-white/[0.07] hover:border-white/15"
               }`}
             >
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-bold text-xs text-slate-900">{p.name}</span>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="font-bold text-xs text-white tracking-wide">{p.name}</span>
                 <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${p.badgeColor}`}>
                   {p.badge}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
+              <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">
                 {p.desc}
               </p>
-              <div className="mt-2.5 flex items-center gap-2 text-[10px] font-mono text-slate-600">
-                <span>Shock: {p.interestShock >= 0 ? `+${p.interestShock}%` : `${p.interestShock}%`}</span>
+              <div className="mt-3 flex items-center gap-2 text-[10px] font-mono text-slate-400">
+                <span className="text-amber-300/90">Shock: {p.interestShock >= 0 ? `+${p.interestShock}%` : `${p.interestShock}%`}</span>
                 <span>•</span>
                 <span>Wage: {p.salaryGrowth}%</span>
                 <span>•</span>
@@ -291,34 +298,34 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
       {/* Interactive Controls & Live Outcome Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Sliders Panel */}
-        <div className="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-[0_6px_24px_rgba(0,0,0,0.03)] space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-amber-600" />
+        <div className="lg:col-span-5 bg-[#0E121B]/85 backdrop-blur-2xl p-6 rounded-2xl border border-white/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.4)] space-y-6">
+          <div className="flex items-center justify-between border-b border-white/[0.07] pb-3">
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <SlidersHorizontal className="w-4 h-4 text-amber-400" />
               <span>Policy Parameters</span>
             </h3>
-            <span className="text-xs text-slate-500 font-medium">Interactive Sliders</span>
+            <span className="text-xs text-slate-400 font-medium">Interactive Sliders</span>
           </div>
 
           {/* Slider 1: Interest Rate Shock */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+              <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
                 <span>Interest Rate Shock on Debt Stock</span>
-                <span className="group relative cursor-pointer text-slate-400 hover:text-slate-600">
+                <span className="group relative cursor-pointer text-slate-500 hover:text-slate-300">
                   <Info className="w-3.5 h-3.5" />
-                  <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block w-48 p-2 bg-slate-900 text-white text-[10px] rounded shadow-lg z-50">
+                  <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block w-48 p-2 bg-[#090A0F] text-slate-200 text-[10px] rounded-lg border border-white/10 shadow-xl z-50">
                     Shift in effective interest rate on Tamil Nadu&apos;s outstanding market loans and central loans.
                   </span>
                 </span>
               </label>
               <span
-                className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${
+                className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-lg border ${
                   interestShock > 0
-                    ? "bg-rose-50 text-rose-700 border-rose-200"
+                    ? "bg-rose-500/10 text-rose-300 border-rose-500/30"
                     : interestShock < 0
-                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                    : "bg-slate-100 text-slate-700 border-slate-200"
+                    ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/30"
+                    : "bg-white/[0.06] text-slate-300 border-white/10"
                 }`}
               >
                 {interestShock > 0 ? `+${interestShock.toFixed(2)}%` : `${interestShock.toFixed(2)}%`}
@@ -331,7 +338,7 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
               step="0.25"
               value={interestShock}
               onChange={(e) => setInterestShock(parseFloat(e.target.value))}
-              className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-amber-600"
+              className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400"
             />
             <div className="flex justify-between text-[10px] text-slate-400 font-mono">
               <span>-1.0% (Refinance)</span>
@@ -343,22 +350,22 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
           {/* Slider 2: Committed Expenditure Growth */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+              <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
                 <span>Committed Expenditure (Salaries & Pensions)</span>
-                <span className="group relative cursor-pointer text-slate-400 hover:text-slate-600">
+                <span className="group relative cursor-pointer text-slate-500 hover:text-slate-300">
                   <Info className="w-3.5 h-3.5" />
-                  <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block w-48 p-2 bg-slate-900 text-white text-[10px] rounded shadow-lg z-50">
+                  <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block w-48 p-2 bg-[#090A0F] text-slate-200 text-[10px] rounded-lg border border-white/10 shadow-xl z-50">
                     Annual percentage expansion of salaries, pensions, and non-discretionary commitments (White Paper Ch. 5).
                   </span>
                 </span>
               </label>
               <span
-                className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${
+                className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-lg border ${
                   salaryGrowth > 8.0
-                    ? "bg-amber-50 text-amber-700 border-amber-200"
+                    ? "bg-amber-500/10 text-amber-300 border-amber-500/30"
                     : salaryGrowth < 8.0
-                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                    : "bg-slate-100 text-slate-700 border-slate-200"
+                    ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/30"
+                    : "bg-white/[0.06] text-slate-300 border-white/10"
                 }`}
               >
                 {salaryGrowth.toFixed(1)}% p.a.
@@ -371,7 +378,7 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
               step="0.5"
               value={salaryGrowth}
               onChange={(e) => setSalaryGrowth(parseFloat(e.target.value))}
-              className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+              className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400"
             />
             <div className="flex justify-between text-[10px] text-slate-400 font-mono">
               <span>0% (Wage Freeze)</span>
@@ -383,22 +390,22 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
           {/* Slider 3: Nominal GSDP Growth Rate */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+              <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
                 <span>Nominal GSDP Growth Rate</span>
-                <span className="group relative cursor-pointer text-slate-400 hover:text-slate-600">
+                <span className="group relative cursor-pointer text-slate-500 hover:text-slate-300">
                   <Info className="w-3.5 h-3.5" />
-                  <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block w-48 p-2 bg-slate-900 text-white text-[10px] rounded shadow-lg z-50">
+                  <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block w-48 p-2 bg-[#090A0F] text-slate-200 text-[10px] rounded-lg border border-white/10 shadow-xl z-50">
                     Nominal state economic expansion rate (Real Growth + Inflation). Denominator of Debt/GSDP ratio.
                   </span>
                 </span>
               </label>
               <span
-                className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${
+                className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-lg border ${
                   gsdpGrowth >= 12.0
-                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                    ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/30"
                     : gsdpGrowth < 9.0
-                    ? "bg-rose-50 text-rose-700 border-rose-200"
-                    : "bg-slate-100 text-slate-700 border-slate-200"
+                    ? "bg-rose-500/10 text-rose-300 border-rose-500/30"
+                    : "bg-white/[0.06] text-slate-300 border-white/10"
                 }`}
               >
                 {gsdpGrowth.toFixed(1)}% p.a.
@@ -411,7 +418,7 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
               step="0.5"
               value={gsdpGrowth}
               onChange={(e) => setGsdpGrowth(parseFloat(e.target.value))}
-              className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+              className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400"
             />
             <div className="flex justify-between text-[10px] text-slate-400 font-mono">
               <span>6.0% (Stagnation)</span>
@@ -421,11 +428,11 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
           </div>
 
           {/* Summary Callout */}
-          <div className="pt-2 border-t border-slate-100">
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/60 flex items-start gap-2.5">
-              <Info className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
-              <p className="text-[11px] text-slate-600 leading-relaxed">
-                Calculations are benchmarked against official figures from <strong>Table 2.1 (Outstanding Debt)</strong> and <strong>Table 5.1 (Committed Expenditure)</strong> of the Tamil Nadu Government White Paper.
+          <div className="pt-2 border-t border-white/[0.07]">
+            <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-start gap-2.5">
+              <Info className="w-4 h-4 text-amber-400/80 shrink-0 mt-0.5" />
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Calculations are benchmarked against official figures from <strong className="text-slate-200">Table 2.1 (Outstanding Debt)</strong> and <strong className="text-slate-200">Table 5.1 (Committed Expenditure)</strong> of the Tamil Nadu Government White Paper.
               </p>
             </div>
           </div>
@@ -436,44 +443,44 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
           {/* Key Metric Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {/* Projected Debt/GSDP */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-2xs">
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
+            <div className="bg-[#0E121B]/85 backdrop-blur-xl p-4 rounded-2xl border border-white/[0.08] shadow-lg">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
                 Debt/GSDP (2026-27)
               </span>
               <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-2xl font-black text-slate-900 font-mono">
+                <span className="text-2xl font-bold text-white font-mono">
                   {finalYear.simulatedDebtToGsdp}%
                 </span>
                 <span
                   className={`text-xs font-semibold font-mono ${
                     finalYear.simulatedDebtToGsdp > finalYear.baselineDebtToGsdp
-                      ? "text-rose-600"
-                      : "text-emerald-600"
+                      ? "text-rose-400"
+                      : "text-emerald-400"
                   }`}
                 >
                   {finalYear.simulatedDebtToGsdp > finalYear.baselineDebtToGsdp ? "▲" : "▼"}{" "}
                   {Math.abs(finalYear.simulatedDebtToGsdp - finalYear.baselineDebtToGsdp).toFixed(2)}%
                 </span>
               </div>
-              <span className="text-[10px] text-slate-500 mt-1 block">
+              <span className="text-[10px] text-slate-400 mt-1 block">
                 Baseline: {finalYear.baselineDebtToGsdp}%
               </span>
             </div>
 
             {/* Total Simulated Debt */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-2xs">
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
+            <div className="bg-[#0E121B]/85 backdrop-blur-xl p-4 rounded-2xl border border-white/[0.08] shadow-lg">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
                 Total Debt (2026-27)
               </span>
               <div className="mt-2 flex items-baseline gap-1.5">
-                <span className="text-2xl font-black text-slate-900 font-mono">
+                <span className="text-2xl font-bold text-white font-mono">
                   ₹{finalYear.simulatedDebt}L
                 </span>
-                <span className="text-xs text-slate-500 font-medium">Cr</span>
+                <span className="text-xs text-slate-400 font-medium">Cr</span>
               </div>
               <span
                 className={`text-[10px] font-semibold font-mono mt-1 block ${
-                  totalIncrementalDebtCr > 0 ? "text-rose-600" : "text-emerald-600"
+                  totalIncrementalDebtCr > 0 ? "text-rose-400" : "text-emerald-400"
                 }`}
               >
                 {totalIncrementalDebtCr > 0 ? `+₹${totalIncrementalDebtCr.toLocaleString("en-IN")} Cr gap` : "Within baseline"}
@@ -481,27 +488,27 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
             </div>
 
             {/* FRBM Statutory Limit Gap */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200/80 shadow-2xs">
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
+            <div className="bg-[#0E121B]/85 backdrop-blur-xl p-4 rounded-2xl border border-white/[0.08] shadow-lg">
+              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
                 FRBM 25% Breach Gap
               </span>
               <div className="mt-2 flex items-baseline gap-1.5">
                 <span
-                  className={`text-2xl font-black font-mono ${
-                    finalYear.gapToTarget > 0 ? "text-rose-600" : "text-emerald-600"
+                  className={`text-2xl font-bold font-mono ${
+                    finalYear.gapToTarget > 0 ? "text-rose-400" : "text-emerald-400"
                   }`}
                 >
                   {finalYear.gapToTarget > 0 ? `+${finalYear.gapToTarget}%` : `${finalYear.gapToTarget}%`}
                 </span>
               </div>
-              <span className="text-[10px] text-slate-500 mt-1 block">
+              <span className="text-[10px] text-slate-400 mt-1 block">
                 {finalYear.gapToTarget > 0 ? "Over statutory ceiling" : "Target compliant"}
               </span>
             </div>
           </div>
 
           {/* Risk Level Alert Banner */}
-          <div className={`p-4 rounded-xl border flex items-center justify-between gap-4 ${riskStatus.color}`}>
+          <div className={`p-4 rounded-2xl border flex items-center justify-between gap-4 backdrop-blur-xl ${riskStatus.color}`}>
             <div className="flex items-center gap-3">
               <ShieldAlert className="w-5 h-5 shrink-0" />
               <div>
@@ -513,7 +520,7 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
             </div>
             <button
               onClick={handleConsultAI}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/90 hover:bg-white text-slate-900 text-xs font-bold shadow-2xs shrink-0 transition-all"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold border border-white/15 shrink-0 transition-all active:scale-95"
             >
               <span>Explain</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -521,15 +528,15 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
           </div>
 
           {/* Visual Simulation Chart */}
-          <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_6px_24px_rgba(0,0,0,0.03)] flex-1 flex flex-col">
-            <div className="flex items-center justify-between mb-4">
+          <div className="bg-[#0E121B]/85 backdrop-blur-2xl p-5 rounded-2xl border border-white/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.4)] flex-1 flex flex-col">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <div>
-                <h4 className="text-sm font-bold text-slate-900">
+                <h4 className="text-sm font-bold text-white">
                   {viewMetric === "ratio"
                     ? "Debt-to-GSDP Trajectory vs FRBM Ceiling (%)"
                     : "Total Outstanding Public Debt (₹ Lakh Crore)"}
                 </h4>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   {viewMetric === "ratio"
                     ? "Comparing baseline vs simulated scenario against the 25% FRBM limit"
                     : "Nominal market debt accumulation trajectory across 5 fiscal years"}
@@ -537,23 +544,23 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
               </div>
 
               {/* Metric Toggle */}
-              <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-semibold">
+              <div className="flex items-center bg-white/[0.04] p-1 rounded-xl border border-white/[0.08] text-xs font-medium">
                 <button
                   onClick={() => setViewMetric("ratio")}
-                  className={`px-2.5 py-1 rounded-md transition-all ${
+                  className={`px-3 py-1 rounded-lg transition-all ${
                     viewMetric === "ratio"
-                      ? "bg-white text-slate-900 shadow-2xs"
-                      : "text-slate-500 hover:text-slate-900"
+                      ? "bg-amber-400/20 text-amber-300 border border-amber-400/30 shadow-[0_0_12px_rgba(245,158,11,0.2)] font-semibold"
+                      : "text-slate-400 hover:text-white"
                   }`}
                 >
                   Debt/GSDP (%)
                 </button>
                 <button
                   onClick={() => setViewMetric("nominal")}
-                  className={`px-2.5 py-1 rounded-md transition-all ${
+                  className={`px-3 py-1 rounded-lg transition-all ${
                     viewMetric === "nominal"
-                      ? "bg-white text-slate-900 shadow-2xs"
-                      : "text-slate-500 hover:text-slate-900"
+                      ? "bg-amber-400/20 text-amber-300 border border-amber-400/30 shadow-[0_0_12px_rgba(245,158,11,0.2)] font-semibold"
+                      : "text-slate-400 hover:text-white"
                   }`}
                 >
                   Debt (₹ Lakh Cr)
@@ -567,28 +574,29 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
                   data={simulationResults}
                   margin={{ top: 15, right: 15, left: -10, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255, 255, 255, 0.06)" />
                   <XAxis
                     dataKey="year"
-                    tick={{ fontSize: 11, fill: "#64748B" }}
-                    axisLine={{ stroke: "#CBD5E1" }}
+                    tick={{ fontSize: 11, fill: "#94A3B8" }}
+                    axisLine={{ stroke: "rgba(255, 255, 255, 0.1)" }}
                   />
                   <YAxis
                     domain={viewMetric === "ratio" ? [20, "auto"] : [5, "auto"]}
-                    tick={{ fontSize: 11, fill: "#64748B" }}
+                    tick={{ fontSize: 11, fill: "#94A3B8" }}
                     unit={viewMetric === "ratio" ? "%" : "L"}
-                    axisLine={{ stroke: "#CBD5E1" }}
+                    axisLine={{ stroke: "rgba(255, 255, 255, 0.1)" }}
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "rgba(15, 23, 42, 0.95)",
+                      backgroundColor: "rgba(10, 13, 20, 0.95)",
                       borderRadius: "12px",
-                      border: "none",
+                      border: "1px solid rgba(245, 158, 11, 0.25)",
                       color: "#fff",
                       fontSize: "12px",
-                      boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+                      boxShadow: "0 12px 30px rgba(0,0,0,0.6)",
+                      backdropFilter: "blur(12px)",
                     }}
-                    formatter={(value: any, name: string) => {
+                    formatter={((value: any, name?: any) => {
                       if (name === "Simulated Scenario" || name === "Simulated Debt") {
                         return viewMetric === "ratio" ? [`${value}%`, "Simulated Debt/GSDP"] : [`₹${value} Lakh Cr`, "Simulated Debt"];
                       }
@@ -596,12 +604,12 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
                         return viewMetric === "ratio" ? [`${value}%`, "Baseline Debt/GSDP"] : [`₹${value} Lakh Cr`, "Baseline Debt"];
                       }
                       return [value, name];
-                    }}
+                    }) as any}
                   />
                   <Legend
                     verticalAlign="top"
                     height={36}
-                    wrapperStyle={{ fontSize: "11px", fontWeight: 500 }}
+                    wrapperStyle={{ fontSize: "11px", fontWeight: 500, color: "#94A3B8" }}
                   />
 
                   {/* 25% FRBM Benchmark Ceiling (Only on ratio view) */}
@@ -614,7 +622,7 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
                       label={{
                         value: "25% FRBM Target Ceiling",
                         position: "insideTopLeft",
-                        fill: "#EF4444",
+                        fill: "#F87171",
                         fontSize: 10,
                         fontWeight: 600,
                       }}
@@ -627,7 +635,7 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
                         type="monotone"
                         dataKey="simulatedDebtToGsdp"
                         name="Simulated Scenario"
-                        fill="rgba(245, 158, 11, 0.15)"
+                        fill="rgba(245, 158, 11, 0.18)"
                         stroke="#F59E0B"
                         strokeWidth={3}
                         dot={{ r: 4, fill: "#F59E0B" }}
@@ -636,10 +644,10 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
                         type="monotone"
                         dataKey="baselineDebtToGsdp"
                         name="Official Baseline"
-                        stroke="#6366F1"
+                        stroke="#94A3B8"
                         strokeWidth={2}
                         strokeDasharray="4 4"
-                        dot={{ r: 3, fill: "#6366F1" }}
+                        dot={{ r: 3, fill: "#94A3B8" }}
                       />
                     </>
                   ) : (
@@ -648,7 +656,7 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
                         type="monotone"
                         dataKey="simulatedDebt"
                         name="Simulated Debt"
-                        fill="rgba(245, 158, 11, 0.15)"
+                        fill="rgba(245, 158, 11, 0.18)"
                         stroke="#F59E0B"
                         strokeWidth={3}
                         dot={{ r: 4, fill: "#F59E0B" }}
@@ -657,10 +665,10 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
                         type="monotone"
                         dataKey="baselineDebt"
                         name="Official Baseline Debt"
-                        stroke="#6366F1"
+                        stroke="#94A3B8"
                         strokeWidth={2}
                         strokeDasharray="4 4"
-                        dot={{ r: 3, fill: "#6366F1" }}
+                        dot={{ r: 3, fill: "#94A3B8" }}
                       />
                     </>
                   )}
@@ -672,22 +680,22 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
       </div>
 
       {/* Year-by-Year Comparison Table */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-[0_6px_24px_rgba(0,0,0,0.03)] overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
+      <div className="bg-[#0E121B]/85 backdrop-blur-2xl rounded-2xl border border-white/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.4)] overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-white/[0.07] flex items-center justify-between">
           <div>
-            <h4 className="text-sm font-bold text-slate-900">
+            <h4 className="text-sm font-bold text-white">
               Medium-Term Fiscal Projection Breakdown (2021-22 to 2026-27)
             </h4>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               Direct comparison of baseline figures vs simulated macroeconomic shock figures.
             </p>
           </div>
-          <span className="text-xs font-mono text-slate-400 font-semibold">Unit: ₹ Lakh Cr / %</span>
+          <span className="text-xs font-mono text-slate-500 font-semibold">Unit: ₹ Lakh Cr / %</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left">
-            <thead className="bg-slate-50 border-b border-slate-200/80 text-slate-600 font-semibold uppercase tracking-wider">
+            <thead className="bg-white/[0.02] border-b border-white/[0.07] text-slate-400 font-semibold uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4">Fiscal Year</th>
                 <th className="py-3 px-4">Baseline Debt</th>
@@ -698,28 +706,28 @@ The simulation projects 2026-27 Debt-to-GSDP to reach ${finalYear.simulatedDebtT
                 <th className="py-3 px-4">Annual Fiscal Gap</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-mono">
+            <tbody className="divide-y divide-white/[0.05] font-mono">
               {simulationResults.map((r) => (
-                <tr key={r.year} className="hover:bg-slate-50/80 transition-colors">
-                  <td className="py-3 px-4 font-sans font-bold text-slate-900">{r.year}</td>
-                  <td className="py-3 px-4 text-slate-600">₹{r.baselineDebt}L Cr</td>
-                  <td className="py-3 px-4 font-bold text-slate-900">₹{r.simulatedDebt}L Cr</td>
-                  <td className="py-3 px-4 text-slate-600">{r.baselineDebtToGsdp}%</td>
+                <tr key={r.year} className="hover:bg-white/[0.02] transition-colors">
+                  <td className="py-3 px-4 font-sans font-bold text-white">{r.year}</td>
+                  <td className="py-3 px-4 text-slate-400">₹{r.baselineDebt}L Cr</td>
+                  <td className="py-3 px-4 font-bold text-amber-300">₹{r.simulatedDebt}L Cr</td>
+                  <td className="py-3 px-4 text-slate-400">{r.baselineDebtToGsdp}%</td>
                   <td
                     className={`py-3 px-4 font-bold ${
-                      r.simulatedDebtToGsdp > 25.0 ? "text-rose-600" : "text-emerald-600"
+                      r.simulatedDebtToGsdp > 25.0 ? "text-rose-400" : "text-emerald-400"
                     }`}
                   >
                     {r.simulatedDebtToGsdp}%
                   </td>
                   <td
                     className={`py-3 px-4 font-semibold ${
-                      r.gapToTarget > 0 ? "text-rose-600" : "text-emerald-600"
+                      r.gapToTarget > 0 ? "text-rose-400" : "text-emerald-400"
                     }`}
                   >
                     {r.gapToTarget > 0 ? `+${r.gapToTarget}%` : `${r.gapToTarget}%`}
                   </td>
-                  <td className="py-3 px-4 text-slate-600">
+                  <td className="py-3 px-4 text-slate-400">
                     {r.annualFiscalGapCr > 0 ? `+₹${r.annualFiscalGapCr.toLocaleString("en-IN")} Cr` : "-"}
                   </td>
                 </tr>

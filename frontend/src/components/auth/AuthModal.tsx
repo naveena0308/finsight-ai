@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Lock, Mail, User, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
+import { X, Lock, Mail, User, Sparkles, ShieldCheck, ArrowRight, Landmark } from "lucide-react";
 
 export interface AuthUser {
   name: string;
@@ -81,44 +81,44 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div 
-        className="bg-white border border-slate-200/90 rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.1)] relative overflow-hidden"
+        className="bg-[#0B0E14] border border-white/[0.1] rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.8)] relative overflow-hidden text-slate-200"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Decorative Top Accent */}
-        <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-400" />
+        {/* Decorative Top Amber Accent */}
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.5)]" />
 
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+          className="absolute top-4 right-4 p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
         <div className="text-center space-y-2 mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/20 text-white font-bold text-2xl mx-auto">
-            🏛️
+          <div className="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.2)] text-amber-400 font-bold mx-auto">
+            <Landmark className="w-6 h-6 stroke-[2.2]" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-            {mode === "signup" ? "Get Started with FinSight AI" : "Welcome Back"}
+          <h2 className="text-xl font-bold text-white tracking-tight font-mono">
+            {mode === "signup" ? "Create FinSight Account" : "Welcome Back"}
           </h2>
-          <p className="text-xs text-slate-500 max-w-xs mx-auto">
-            Access verified Tamil Nadu fiscal models, LangGraph table multi-agent synthesis, and citation inspectors.
+          <p className="text-xs text-slate-400 max-w-xs mx-auto">
+            Access verified Tamil Nadu fiscal models, deep structured tables, and primary source citations.
           </p>
         </div>
 
         {/* Mode Switcher */}
-        <div className="flex bg-slate-100 p-1 rounded-xl text-xs font-semibold mb-5">
+        <div className="flex bg-white/[0.04] p-1 rounded-xl text-xs font-semibold mb-5 border border-white/[0.08]">
           <button
             type="button"
             onClick={() => { setMode("signup"); setError(null); }}
             className={`flex-1 py-1.5 rounded-lg transition-all ${
               mode === "signup"
-                ? "bg-white text-slate-900 shadow-xs"
-                : "text-slate-500 hover:text-slate-800"
+                ? "bg-amber-400/15 text-amber-300 border border-amber-400/30 shadow-[0_0_10px_rgba(245,158,11,0.15)]"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             Create Account
@@ -128,8 +128,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
             onClick={() => { setMode("signin"); setError(null); }}
             className={`flex-1 py-1.5 rounded-lg transition-all ${
               mode === "signin"
-                ? "bg-white text-slate-900 shadow-xs"
-                : "text-slate-500 hover:text-slate-800"
+                ? "bg-amber-400/15 text-amber-300 border border-amber-400/30 shadow-[0_0_10px_rgba(245,158,11,0.15)]"
+                : "text-slate-400 hover:text-white"
             }`}
           >
             Sign In
@@ -142,7 +142,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
             type="button"
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-medium transition-all shadow-2xs hover:shadow-xs disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 text-xs font-medium transition-all shadow-sm disabled:opacity-50 active:scale-95"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -169,23 +169,23 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
             type="button"
             onClick={handleGuestLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-semibold transition-all shadow-2xs hover:shadow-xs disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-amber-400/30 bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 text-xs font-semibold transition-all shadow-[0_0_15px_rgba(245,158,11,0.15)] disabled:opacity-50 active:scale-95"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span>Frictionless 1-Click Guest Access</span>
-            <ArrowRight className="w-3.5 h-3.5 text-amber-700 ml-1" />
+            <ArrowRight className="w-3.5 h-3.5 text-amber-400 ml-1" />
           </button>
         </div>
 
         <div className="relative flex items-center justify-center mb-5">
-          <div className="border-t border-slate-200 w-full" />
-          <span className="bg-white px-3 text-[11px] text-slate-400 font-medium uppercase tracking-wider shrink-0">
+          <div className="border-t border-white/[0.08] w-full" />
+          <span className="bg-[#0B0E14] px-3 text-[11px] text-slate-500 font-medium uppercase tracking-wider shrink-0">
             or with email
           </span>
         </div>
 
         {error && (
-          <div className="mb-4 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs text-center font-medium">
+          <div className="mb-4 p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs text-center font-medium">
             {error}
           </div>
         )}
@@ -194,7 +194,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
         <form onSubmit={handleSubmit} className="space-y-3.5">
           {mode === "signup" && (
             <div>
-              <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+              <label className="block text-[11px] font-semibold text-slate-300 mb-1">
                 Full Name
               </label>
               <div className="relative">
@@ -204,14 +204,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                   placeholder="e.g. Priyanshu Sharma"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500/80 focus:bg-white transition-all"
+                  className="w-full pl-9 pr-3 py-2 bg-white/[0.04] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/80 focus:bg-white/[0.06] transition-all"
                 />
               </div>
             </div>
           )}
 
           <div>
-            <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+            <label className="block text-[11px] font-semibold text-slate-300 mb-1">
               Email Address
             </label>
             <div className="relative">
@@ -221,13 +221,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                 placeholder="analyst@domain.gov.in"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500/80 focus:bg-white transition-all"
+                className="w-full pl-9 pr-3 py-2 bg-white/[0.04] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/80 focus:bg-white/[0.06] transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+            <label className="block text-[11px] font-semibold text-slate-300 mb-1">
               Password
             </label>
             <div className="relative">
@@ -237,7 +237,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500/80 focus:bg-white transition-all"
+                className="w-full pl-9 pr-3 py-2 bg-white/[0.04] border border-white/10 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/80 focus:bg-white/[0.06] transition-all"
               />
             </div>
           </div>
@@ -245,16 +245,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-bold text-xs transition-all shadow-md shadow-amber-500/20 disabled:opacity-50 mt-1"
+            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-slate-950 font-bold text-xs transition-all shadow-[0_0_20px_rgba(245,158,11,0.25)] hover:shadow-[0_0_28px_rgba(245,158,11,0.4)] disabled:opacity-50 mt-1 active:scale-95"
           >
             {loading ? "Authenticating..." : mode === "signup" ? "Create Free Account" : "Sign In to Dashboard"}
           </button>
         </form>
 
         {/* Security badge footer */}
-        <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[10px] text-slate-400">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Neon PostgreSQL Security • 100% Free & Open Source</span>
+        <div className="mt-5 pt-3 border-t border-white/[0.08] flex items-center justify-center gap-1.5 text-[10px] text-slate-400">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Neon Enterprise Security • 100% Free & Open Source</span>
         </div>
       </div>
     </div>

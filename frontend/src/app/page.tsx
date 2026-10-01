@@ -10,7 +10,7 @@ import { HealthStatus, TableMetadata } from "@/lib/types";
 import { checkBackendHealth, fetchBudgetTables } from "@/lib/api";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"chat" | "tables" | "simulator">("chat");
+  const [activeTab, setActiveTab] = useState<"chat" | "tables" | "simulator">("tables");
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [tables, setTables] = useState<TableMetadata[]>([]);
   const [loadingTables, setLoadingTables] = useState(false);
@@ -55,7 +55,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F9FC] text-slate-800 flex flex-col font-sans relative selection:bg-amber-100 selection:text-amber-900">
+    <div className="min-h-screen bg-[#08090C] text-slate-100 flex flex-col font-sans relative selection:bg-amber-500/25 selection:text-amber-200">
       <Header
         health={health}
         activeTab={activeTab}

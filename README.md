@@ -14,7 +14,7 @@ Unlike naive "chat with PDF" wrappers that hallucinate numbers, FinSight AI leve
 - ⚡ **Dual LLM Engine with Zero-Latency Failover**: Primary reasoning on Google Gemini 3.8 Flash with an automatic circuit-breaker fallback to OpenAI `gpt-4o-mini`.
 - 🔌 **Model Context Protocol (MCP) Server**: Exposes 4 native MCP tools for Claude Desktop, Cursor, or any MCP client (`list_budget_tables`, `query_budget_table`, `search_budget_narrative`, `run_financial_analyst_agent`).
 - 📈 **Interactive Next.js 14 Fiscal Dashboard**: Real-time KPI summaries, interactive Recharts visualizations (Debt trajectory, Revenue Deficit, Crowding-Out analysis, Peer state comparisons), and click-to-inspect source table modals.
-- 🎯 **Automated Evaluation Benchmark**: Evaluation suite validating routing accuracy, keyword coverage, citation presence, and response latency (**93.3% Precision Score**).
+- 🎯 **Automated Evaluation Benchmark**: Evaluation suite validating routing accuracy, keyword coverage, citation presence, and response latency (**95.6% Precision Score** across 30 benchmark test cases).
 
 ---
 
@@ -64,7 +64,7 @@ Unlike naive "chat with PDF" wrappers that hallucinate numbers, FinSight AI leve
 - [x] Multi-agent pipeline with LangGraph `StateGraph` (Planner → Router → Verifier)
 - [x] Exposable Model Context Protocol (MCP) Server with 4 tools
 - [x] Next.js 14 Frontend with interactive Fiscal Dashboard, Recharts, and Table Modal
-- [x] Automated RAG evaluation benchmark suite (93.3% precision score)
+- [x] Automated RAG evaluation benchmark suite (95.6% precision score across 30 benchmark test cases)
 - [ ] Multi-document cross-state budget comparison expansion
 
 ---

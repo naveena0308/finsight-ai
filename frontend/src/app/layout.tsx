@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "FinSight AI — Agentic Financial Budget Analyst",
+  title: "FinSight AI - Agentic Financial Budget Analyst",
   description: "Evidence-grounded financial intelligence for Indian government budgets with verified citations and Neon PostgreSQL",
 };
 

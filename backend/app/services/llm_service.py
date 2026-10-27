@@ -26,8 +26,12 @@ class LLMService:
         self.openai_model = "gpt-4o-mini"
         self.gemini_exhausted = False  # Circuit breaker: skips Gemini if daily quota exceeded
 
-        # Initialize clients
-        self.gemini_client = genai.Client(api_key=self.gemini_key) if self.gemini_key else None
+        # Initialize clients with timeout protection (minimum 10s allowed by Gemini API)
+        self.gemini_client = (
+            genai.Client(api_key=self.gemini_key, http_options={"timeout": 10000})
+            if self.gemini_key
+            else None
+        )
         self.openai_client = openai.OpenAI(api_key=self.openai_key) if self.openai_key else None
 
     def generate(
@@ -36,7 +40,7 @@ class LLMService:
         system_instruction: Optional[str] = None,
         temperature: float = 0.2,
         max_output_tokens: int = 1500,
-        retries: int = 2,
+        retries: int = 1,
     ) -> str:
         """
         Generate text response with automatic retry on temporary demand spikes (503)
@@ -69,7 +73,8 @@ class LLMService:
                         time.sleep(sleep_time)
                         continue
                     else:
-                        logger.warning(f"[LLM] Gemini generation failed: {e}. Switching to OpenAI...")
+                        logger.warning(f"[LLM] Gemini generation failed ({e}). Switching to OpenAI fallback immediately...")
+                        self.gemini_exhausted = True
                         break
 
         # 2. Try Fallback: OpenAI (gpt-4o-mini)

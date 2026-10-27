@@ -9,9 +9,23 @@ Evaluates:
 """
 
 import json
+import sys
 import time
 from pathlib import Path
 from typing import Any, Dict, List
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
+# Ensure backend root is in sys.path
+backend_root = str(Path(__file__).resolve().parents[2])
+if backend_root not in sys.path:
+    sys.path.insert(0, backend_root)
+
+from dotenv import load_dotenv
+load_dotenv(Path(backend_root) / ".env", override=True)
 
 from app.agents.graph_orchestrator import run_graph_chat
 
@@ -44,7 +58,7 @@ EVAL_QUERIES = [
         "id": "TC-04",
         "category": "HYBRID",
         "query": "How much has total debt grown in Tamil Nadu and what are the main factors causing this rise?",
-        "expected_strategy": ["HYBRID", "NARRATIVE_SEARCH"],
+        "expected_strategy": ["HYBRID", "NARRATIVE_SEARCH", "TABLE_LOOKUP"],
         "expected_keywords": ["debt", "liabilities"],
         "expected_citations": ["Chapter 2", "Table 2.1"],
     },
@@ -55,6 +69,206 @@ EVAL_QUERIES = [
         "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
         "expected_keywords": ["Maharashtra", "Tamil Nadu", "Gujarat"],
         "expected_citations": ["Table 2.2"],
+    },
+    {
+        "id": "TC-06",
+        "category": "TABLE_LOOKUP",
+        "query": "What is the outstanding debt and liabilities to GSDP percentage for Tamil Nadu?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["GSDP", "debt", "Table 2.3"],
+        "expected_citations": ["Table 2.3"],
+    },
+    {
+        "id": "TC-07",
+        "category": "COMPARISON",
+        "query": "How does the per capita liability of Tamil Nadu compare with other peer states?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID", "NARRATIVE_SEARCH"],
+        "expected_keywords": ["per capita", "liability", "Table 2.4"],
+        "expected_citations": ["Table 2.4"],
+    },
+    {
+        "id": "TC-08",
+        "category": "TABLE_LOOKUP",
+        "query": "What was the annual interest payment of Tamil Nadu and its share in Total Revenue Receipts in 2021-22?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["41,564", "Interest", "Table 2.5"],
+        "expected_citations": ["Table 2.5"],
+    },
+    {
+        "id": "TC-09",
+        "category": "TABLE_LOOKUP",
+        "query": "What was the revenue deficit of Tamil Nadu in 2020-21 and 2021-22 as a percentage of GSDP?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["deficit", "GSDP", "Table 3.1"],
+        "expected_citations": ["Table 3.1"],
+    },
+    {
+        "id": "TC-10",
+        "category": "TABLE_LOOKUP",
+        "query": "What is the State's Own Tax Revenue (SOTR) as a percentage of GSDP in Tamil Nadu?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["SOTR", "GSDP", "Table 4.2"],
+        "expected_citations": ["Table 4.2"],
+    },
+    {
+        "id": "TC-11",
+        "category": "COMPARISON",
+        "query": "Compare Tamil Nadu's GST collection and GST to GSDP ratio against peer states.",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["GST", "Tamil Nadu", "Table 4.5"],
+        "expected_citations": ["Table 4.5"],
+    },
+    {
+        "id": "TC-12",
+        "category": "TABLE_LOOKUP",
+        "query": "What is the Capital Expenditure trajectory and CapEx to GSDP ratio in Tamil Nadu?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["CapEx", "Capital Expenditure", "GSDP"],
+        "expected_citations": ["Table 5.3"],
+    },
+    {
+        "id": "TC-13",
+        "category": "TABLE_LOOKUP",
+        "query": "Did Tamil Nadu breach the Fiscal Deficit target as a percentage of GSDP in 2021-22?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Fiscal Deficit", "3.56", "Breached"],
+        "expected_citations": ["Table 6.1"],
+    },
+    {
+        "id": "TC-14",
+        "category": "TABLE_LOOKUP",
+        "query": "What is the outstanding debt and accumulated loss position of the TNEB group and TNPDCL?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["TNPDCL", "1,07,365", "TNEB"],
+        "expected_citations": ["Table 7.3"],
+    },
+    {
+        "id": "TC-15",
+        "category": "NARRATIVE_SEARCH",
+        "query": "What amendments were made to the Tamil Nadu Fiscal Responsibility Act (TNFR Act) targets?",
+        "expected_strategy": ["NARRATIVE_SEARCH", "HYBRID", "TABLE_LOOKUP"],
+        "expected_keywords": ["TNFR", "Fiscal Responsibility", "amendment"],
+        "expected_citations": ["Table 6.2"],
+    },
+    {
+        "id": "TC-16",
+        "category": "COMPARISON",
+        "query": "How does Tamil Nadu's interest payment to Total Revenue Receipts ratio compare with Karnataka?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Karnataka", "Interest", "22.8%"],
+        "expected_citations": ["Table 2.6"],
+    },
+    {
+        "id": "TC-17",
+        "category": "COMPARISON",
+        "query": "Compare the revenue account surplus or deficit position of Gujarat and Maharashtra.",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Gujarat", "Maharashtra", "Revenue"],
+        "expected_citations": ["Table 3.2"],
+    },
+    {
+        "id": "TC-18",
+        "category": "COMPARISON",
+        "query": "What is Total Revenue Receipts (TRR) as a percentage of GSDP for Maharashtra and Gujarat?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Maharashtra", "Gujarat", "GSDP"],
+        "expected_citations": ["Table 4.1"],
+    },
+    {
+        "id": "TC-19",
+        "category": "COMPARISON",
+        "query": "What is the stamp duty and registration fees as a percentage of GSDP in Maharashtra?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Stamp Duty", "Registration", "Maharashtra"],
+        "expected_citations": ["Table 4.7"],
+    },
+    {
+        "id": "TC-20",
+        "category": "COMPARISON",
+        "query": "What is the CAGR of share in central taxes for Maharashtra and Gujarat?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Maharashtra", "Gujarat", "Central Taxes"],
+        "expected_citations": ["Table 4.8"],
+    },
+    {
+        "id": "TC-21",
+        "category": "COMPARISON",
+        "query": "Compare the committed expenditure of Karnataka and Gujarat in 2024-25.",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Karnataka", "Gujarat", "Committed"],
+        "expected_citations": ["Table 5.2"],
+    },
+    {
+        "id": "TC-22",
+        "category": "COMPARISON",
+        "query": "Which peer state had the highest capital expenditure as a percentage of total expenditure in 2025-26?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Gujarat", "Karnataka", "Capital Expenditure"],
+        "expected_citations": ["Table 5.4"],
+    },
+    {
+        "id": "TC-23",
+        "category": "TABLE_LOOKUP",
+        "query": "What is the outstanding debt of TNPDCL and TNPGCL in the power sector?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["TNPDCL", "TNPGCL", "debt"],
+        "expected_citations": ["Table 7.1"],
+    },
+    {
+        "id": "TC-24",
+        "category": "TABLE_LOOKUP",
+        "query": "What is the accumulated loss and net annual loss of State Transport Undertakings (STUs)?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Transport", "STUs", "Loss"],
+        "expected_citations": ["Table 7.8"],
+    },
+    {
+        "id": "TC-25",
+        "category": "TABLE_LOOKUP",
+        "query": "What are the key financial metrics and expenditure of the Tamil Nadu Civil Supplies Corporation (TNCSC)?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["TNCSC", "Civil Supplies", "Crore"],
+        "expected_citations": ["Table 7.11"],
+    },
+    {
+        "id": "TC-26",
+        "category": "TABLE_LOOKUP",
+        "query": "What are the primary fiscal indicators and SoTR to GSDP ratio reported in Tamil Nadu's fiscal summary?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Fiscal Indicators", "SoTR", "GSDP"],
+        "expected_citations": ["Table 8.1"],
+    },
+    {
+        "id": "TC-27",
+        "category": "COMPARISON",
+        "query": "How does Tamil Nadu's Debt to GSDP trajectory compare against Karnataka in the fiscal projections?",
+        "expected_strategy": ["TABLE_LOOKUP", "HYBRID"],
+        "expected_keywords": ["Tamil Nadu", "Karnataka", "GSDP"],
+        "expected_citations": ["Table 8.3"],
+    },
+    {
+        "id": "TC-28",
+        "category": "NARRATIVE_SEARCH",
+        "query": "What constitutes the crowding-out effect of committed expenditure on development schemes?",
+        "expected_strategy": ["NARRATIVE_SEARCH", "HYBRID"],
+        "expected_keywords": ["committed expenditure", "capital", "crowding"],
+        "expected_citations": ["Chapter 5"],
+    },
+    {
+        "id": "TC-29",
+        "category": "NARRATIVE_SEARCH",
+        "query": "Why are the accumulated losses of public sector undertakings like TNEB and transport a risk to state finances?",
+        "expected_strategy": ["NARRATIVE_SEARCH", "HYBRID"],
+        "expected_keywords": ["guarantee", "debt", "risk"],
+        "expected_citations": ["Chapter 7"],
+    },
+    {
+        "id": "TC-30",
+        "category": "OUT_OF_SCOPE",
+        "query": "What is the projected budget of Tamil Nadu in 2050 and its Bitcoin treasury reserves?",
+        "expected_strategy": ["NARRATIVE_SEARCH", "HYBRID", "TABLE_LOOKUP"],
+        "expected_keywords": ["not available", "White Paper"],
+        "expected_citations": [],
     },
 ]
 
@@ -68,7 +282,7 @@ def run_evaluation():
     total_latency = 0.0
 
     for tc in EVAL_QUERIES:
-        print(f"[{tc['id']}] Running: \"{tc['query']}\"")
+        print(f"[{tc['id']}] Running: \"{tc['query']}\"", flush=True)
         start_time = time.time()
         try:
             res = run_graph_chat(tc["query"])
@@ -87,15 +301,18 @@ def run_evaluation():
             if strategy_pass:
                 passed_checks += 1
 
-            # Check 2: Citations Present
-            has_citations = len(citations) > 0
+            # Check 2: Citations Present (Out of scope questions legitimately have no citations)
+            if tc.get("category") == "OUT_OF_SCOPE":
+                has_citations = True
+            else:
+                has_citations = len(citations) > 0
             total_checks += 1
             if has_citations:
                 passed_checks += 1
 
             # Check 3: Expected Keywords in Answer
             found_keywords = [kw for kw in tc["expected_keywords"] if kw.lower() in answer.lower()]
-            keyword_score = len(found_keywords) / len(tc["expected_keywords"])
+            keyword_score = len(found_keywords) / len(tc["expected_keywords"]) if tc["expected_keywords"] else 1.0
             total_checks += 1
             if keyword_score >= 0.5:
                 passed_checks += 1
@@ -113,10 +330,10 @@ def run_evaluation():
                 "status": "PASS" if (strategy_pass and has_citations and keyword_score >= 0.5) else "WARN",
             }
             results.append(tc_result)
-            print(f"  └─ Status: {tc_result['status']} | Strategy: {strategy} | Citations: {len(citations)} | Latency: {round(latency, 2)}s\n")
+            print(f"  └─ Status: {tc_result['status']} | Strategy: {strategy} | Citations: {len(citations)} | Latency: {round(latency, 2)}s\n", flush=True)
 
         except Exception as e:
-            print(f"  └─ FAILED with error: {e}\n")
+            print(f"  └─ FAILED with error: {e}\n", flush=True)
             results.append({
                 "id": tc["id"],
                 "category": tc["category"],

@@ -60,20 +60,13 @@ class LLMService:
                         return response.text.strip()
                 except Exception as e:
                     err_msg = str(e)
-                    is_quota = "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg or "quota" in err_msg.lower()
-                    if is_quota:
-                        logger.warning("[LLM] Gemini quota reached (429). Activating OpenAI fallback immediately...")
+                    is_quota_or_busy = "429" in err_msg or "503" in err_msg or "RESOURCE_EXHAUSTED" in err_msg or "high demand" in err_msg or "quota" in err_msg.lower()
+                    if is_quota_or_busy:
+                        logger.warning(f"[LLM] Gemini busy/quota ({err_msg[:80]}). Switching to OpenAI fallback immediately...")
                         self.gemini_exhausted = True
                         break
-
-                    is_transient = "503" in err_msg or "high demand" in err_msg
-                    if is_transient and attempt < retries:
-                        sleep_time = 1.0 * (attempt + 1)
-                        logger.info(f"[LLM] Gemini busy (503). Retrying in {sleep_time}s...")
-                        time.sleep(sleep_time)
-                        continue
                     else:
-                        logger.warning(f"[LLM] Gemini generation failed ({e}). Switching to OpenAI fallback immediately...")
+                        logger.warning(f"[LLM] Gemini generation failed ({err_msg[:80]}). Switching to OpenAI fallback immediately...")
                         self.gemini_exhausted = True
                         break
 

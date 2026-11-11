@@ -98,7 +98,7 @@ async def list_tables():
 
 
 @app.get("/api/tables/{table_name}")
-async def get_table_details(table_name: str):
+def get_table_details(table_name: str):
     """Returns actual rows and metadata for a specific budget table."""
     con = get_pg_connection()
     try:
@@ -129,7 +129,7 @@ async def get_table_details(table_name: str):
 
 
 @app.post("/api/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
+def chat(request: ChatRequest):
     """
     Main Chatbot Agent Endpoint:
     Processes user query using LangGraph multi-agent state graph with query planning,

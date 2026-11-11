@@ -62,7 +62,34 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedCitation, setSelectedCitation] = useState<CitationItem | null>(null);
+  const [loadingSeconds, setLoadingSeconds] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (loading) {
+      setLoadingSeconds(0);
+      interval = setInterval(() => {
+        setLoadingSeconds((prev) => prev + 1);
+      }, 1000);
+    } else {
+      setLoadingSeconds(0);
+    }
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  const getLoadingMessage = () => {
+    if (loadingSeconds < 6) {
+      return "Verifying source budget tables and compiling official fiscal analysis...";
+    }
+    if (loadingSeconds < 16) {
+      return "Executing LangGraph multi-agent SQL lookups & pgvector retrieval in Neon Postgres...";
+    }
+    if (loadingSeconds < 30) {
+      return "Synthesizing evidence and cross-checking primary source page citations...";
+    }
+    return "Backend is processing multi-agent graph (first query after spin-down takes ~45s)...";
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -203,7 +230,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
               <div className="flex items-center gap-3 p-4 rounded-xl bg-white border border-zinc-200/80 text-zinc-700 text-xs shadow-xs animate-pulse">
                 <Loader2 className="w-4 h-4 animate-spin text-zinc-900 shrink-0" />
                 <span className="font-medium">
-                  Verifying source budget tables and compiling official fiscal analysis...
+                  {getLoadingMessage()}
                 </span>
               </div>
             )}

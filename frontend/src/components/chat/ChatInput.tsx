@@ -38,12 +38,12 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   };
 
   return (
-    <div className="space-y-3 pb-3">
-      {/* Suggestion Chips (Only shown when active conversation exists) */}
+    <div className="space-y-2.5 pb-4">
+      {/* Suggestion Chips */}
       {showChips && (
         <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs no-scrollbar">
-          <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+          <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
+            <Sparkles className="w-3.5 h-3.5 text-zinc-500" />
             Quick Prompts:
           </span>
           {SUGGESTED_PROMPTS.map((p, idx) => (
@@ -51,7 +51,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               key={idx}
               onClick={() => handleSelectPrompt(p.question)}
               disabled={disabled}
-              className="px-3 py-1 rounded-full bg-[#121622] hover:bg-[#1A2030] border border-white/[0.08] hover:border-amber-400/40 text-zinc-300 hover:text-white text-xs whitespace-nowrap transition-all shadow-2xs disabled:opacity-50 font-medium"
+              className="px-3 py-1 rounded-full bg-white hover:bg-zinc-100 border border-zinc-200 text-zinc-700 hover:text-zinc-950 text-xs whitespace-nowrap transition-all shadow-2xs disabled:opacity-50 font-medium"
             >
               {p.title}
             </button>
@@ -59,10 +59,10 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         </div>
       )}
 
-      {/* Luxury Obsidian Input Form */}
+      {/* Modern Executive Input Form */}
       <form
         onSubmit={handleSubmit}
-        className="relative flex items-end gap-2 bg-[#0D1017]/95 border border-white/[0.12] focus-within:border-amber-400/80 focus-within:ring-4 focus-within:ring-amber-500/15 rounded-2xl p-3 transition-all shadow-[0_12px_40px_rgba(0,0,0,0.8)] backdrop-blur-xl"
+        className="relative flex items-end gap-2 bg-white border border-zinc-200/90 focus-within:border-zinc-400 focus-within:ring-2 focus-within:ring-zinc-950/5 rounded-2xl p-2.5 transition-all shadow-sm"
       >
         <textarea
           ref={textareaRef}
@@ -72,15 +72,16 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           placeholder="Ask a question about the Tamil Nadu Budget (e.g. debt trajectory, FRBM ceiling, salary bills)..."
           rows={2}
           disabled={disabled}
-          className="flex-1 bg-transparent resize-none text-white placeholder-zinc-500 text-sm focus:outline-none px-2 py-1 max-h-32"
+          className="flex-1 bg-transparent resize-none text-zinc-900 placeholder:text-zinc-400 text-sm focus:outline-none px-2 py-1 max-h-32 leading-relaxed"
         />
 
         <button
           type="submit"
           disabled={!input.trim() || disabled}
-          className="p-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-300 text-slate-950 font-extrabold transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(245,158,11,0.25)] shrink-0 hover:scale-105 active:scale-95"
+          className="p-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-xs shrink-0 active:scale-95"
+          title="Send query"
         >
-          <SendHorizontal className="w-4 h-4 stroke-[2.4]" />
+          <SendHorizontal className="w-4 h-4" />
         </button>
       </form>
     </div>
